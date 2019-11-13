@@ -9,9 +9,9 @@ typedef struct {
     char nome[80];
 } BCP;
 
-BCP prontos[7];
-BCP prontosBackup[7];
-BCP chegou[7];
+BCP prontos[1024];
+BCP prontosBackup[1024];
+BCP chegou[1024];
 
 int nextBCP = 0;
 
@@ -19,12 +19,12 @@ void criarProcesso(int cpus, char nomeP[80]) {
     prontos[nextBCP].pId = nextBCP + 100;
     prontos[nextBCP].cpu = cpus;
     strcpy(prontos[nextBCP].nome, nomeP);
-    nextBCP++;
     printf("\n[FILA DE PRONTOS] Processo %s [%i] com %i ciclos criado!", nomeP, prontos[nextBCP].pId, cpus);
+    nextBCP++;
 }
 
 void executar() {
-    memcpy(prontosBackup, prontos, 1024);
+    memcpy(prontosBackup, prontos, 10000);
 
     system("cls");
     int maxCPU = -1;
@@ -59,17 +59,20 @@ void executar() {
                 prontos[i].cpu = prontos[i].cpu - 1;
                 maxCPU += prontos[i].cpu;
             }
+
+            if ((i+1) >= 7 && (i+1) % 7 == 0 && i < (nextBCP -1)) {
+                printf("\n[FILA DE PRONTOS] Aguardando a próxima fila...\n");
+            }
         }
     }
 
-    printf("\n\n------------------- TABELA DE FINALIZAÇÃO -------------------\n");
+    printf("\n------------------- TABELA DE FINALIZAÇÃO -------------------\n");
 
     for (int i = 1; i < nextBCP+1; i++) {
-        printf("\n%iº %s [%i]", i, chegou[i].nome, chegou[i]);
+        printf("\n %iº %s [%i]", i, chegou[i].nome, chegou[i]);
     }
 
     printf("\n\n-------------------------------------------------------------\n");
-    printf("\n");
     printf("\nOpções:\n");
     printf("\n[1] Manipular Tabela de Processos");
     printf("\n[2] Executar a Simulação");
@@ -250,10 +253,11 @@ void copyright() {
     printf("- Vinicius Penachioni Tenomaro \n\n");
 }
 
+bool displayController = true;
+
 void controller() {
     system("cls");
     int op = 0;
-    bool display = true;
 
     printf("------------------------------------------------------------\n");
     printf("\n");
@@ -268,7 +272,7 @@ void controller() {
     printf("\n [4] Encerrar\n");
     printf("\n------------------------------------------------------------\n");
 
-    while(display) {
+    while(displayController) {
         printf("\nOpção: ");
         scanf("%i", &op);
         fflush(stdin);
@@ -288,7 +292,7 @@ void controller() {
             break;
         case 4:
             printf("\nFechando o programa...\n");
-            display = false;
+            displayController = false;
             break;
         }
     }
