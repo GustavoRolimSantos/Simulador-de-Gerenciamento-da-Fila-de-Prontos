@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <locale.h>
 #include <string.h>
@@ -23,7 +24,27 @@ void criarProcesso(int cpus, char nomeP[80]) {
     nextBCP++;
 }
 
+bool canExecute() {
+    int real = 0;
+
+    for (int i = 0; i < nextBCP; i++) {
+        if (prontos[i].pId == -99)
+            continue;
+
+        real++;
+    }
+
+    return real > 0;
+}
+
 void executar() {
+
+    if (!canExecute()) {
+        printf("\n[FILA DE PRONTOS] Para iniciar a execução é necessário existir pelo menos 1 processo.");
+        return;
+    }
+
+
     memcpy(prontosBackup, prontos, 10000);
 
     system("cls");
@@ -60,9 +81,9 @@ void executar() {
                 maxCPU += prontos[i].cpu;
             }
 
-            if ((i+1) >= 7 && (i+1) % 7 == 0 && i < (nextBCP -1)) {
+            /*if ((i+1) >= 7 && (i+1) % 7 == 0 && i < (nextBCP -1)) {
                 printf("\n[FILA DE PRONTOS] Aguardando a próxima fila...\n");
-            }
+            }*/
         }
     }
 
@@ -88,6 +109,19 @@ void executar() {
     }
 
     chegouId = 1;
+}
+
+bool canCreate() {
+    int real = 0;
+
+    for (int i = 0; i < nextBCP; i++) {
+        if (prontos[i].pId == -99)
+            continue;
+
+        real++;
+    }
+
+    return real < 7;
 }
 
 void manipulate() {
@@ -126,6 +160,12 @@ void manipulate() {
             printf("\n[FILA DE PRONTOS] O comando digitado é inválido!");
             break;
         case 1:
+
+            if (!canCreate()) {
+                printf("\n[FILA DE PRONTOS] Limite de processos atingido. Máximo: 7");
+                break;
+            }
+
             printf("\nDigite o nome do processo: ");
             scanf("%s", &pName);
             fflush(stdin);
@@ -162,7 +202,7 @@ void manipulate() {
 
             if (!found) {
                 printf("\n[FILA DE PRONTOS] Não foi possivel localizar o processo com o PID informado.");
-                return;
+                break;
             }
 
             printf("\nDigite o novo Nome do processo: ");
@@ -196,12 +236,15 @@ void manipulate() {
                     continue;
                 if (prontos[i].pId == currentPID) {
                     prontos[i].pId = -99;
+
+                    strcpy(rmvName, prontos[i].nome);
                     found = true;
                 }
             }
 
             if (!found) {
                 printf("\n[FILA DE PRONTOS] Não foi possivel localizar o processo com o PID informado.");
+                break;
             }
 
             printf("\n[FILA DE PRONTOS] Processo %s [%i] removido com sucesso!", rmvName, currentPID);
@@ -247,10 +290,10 @@ void manipulate() {
 
 void copyright() {
     printf("\nEquipe de Desenvolvedores: \n");
-    printf("- André Nicola Nunes \n");
-    printf("- Gustavo Rolim dos Santos \n");
-    printf("- Maicon Gabriel de Sá \n");
-    printf("- Vinicius Penachioni Tenomaro \n\n");
+    printf("</> André Nicola Nunes \n");
+    printf("</> Gustavo Rolim dos Santos \n");
+    printf("</> Maicon Gabriel de Sá \n");
+    printf("</> Vinicius Penachioni Tenomaro \n\n");
 }
 
 bool displayController = true;
