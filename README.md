@@ -3,8 +3,7 @@
 ### Projeto para avaliação da disciplina de Sistemas Operacionais I -  Fatec Americana.
 Esse programa consiste em mostrar o funcionamento de uma fila de prontos em um S.O.
 
-![Screenshot_12.png]({{site.baseurl}}/Screenshot_12.png)
-
+![]({{site.baseurl}}/http://prntscr.com/q0r399)
 
 **FUNCIONALIDADES:**
 - CRIAR PROCESSOS
