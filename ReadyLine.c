@@ -90,8 +90,7 @@ void executar() {
     printf("\n------------------- TABELA DE FINALIZAÇÃO -------------------\n");
 
     for (int i = 1; i < nextBCP+1; i++) {
-        if (chegou[i].pId != -99)
-            printf("\n %iº %s [%i]", i, chegou[i].nome, chegou[i]);
+        printf("\n %iº %s [%i]", i, chegou[i].nome, chegou[i]);
     }
 
     printf("\n\n-------------------------------------------------------------\n");
@@ -230,25 +229,34 @@ void manipulate() {
             scanf("%i", &currentPID);
             fflush(stdin);
 
+            BCP removedList[1024];
+
             char rmvName[80];
+
+            int id = 0;
 
             for (int i = 0; i < nextBCP; i++) {
                 if (prontos[i].pId == -99)
                     continue;
                 if (prontos[i].pId == currentPID) {
                     prontos[i].pId = -99;
-                    prontosBackup[i].pId = -99;
+
                     strcpy(rmvName, prontos[i].nome);
                     found = true;
+                } else {
+                    removedList[id] = prontos[i];
+                    id++;
                 }
             }
+
+            memcpy(prontos, removedList, 10000);
+            nextBCP--;
 
             if (!found) {
                 printf("\n[FILA DE PRONTOS] Não foi possivel localizar o processo com o PID informado.");
                 break;
             }
 
-            nextBCP--;
             printf("\n[FILA DE PRONTOS] Processo %s [%i] removido com sucesso!", rmvName, currentPID);
             break;
         case 4:
