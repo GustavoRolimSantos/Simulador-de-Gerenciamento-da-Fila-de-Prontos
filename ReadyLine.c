@@ -90,7 +90,8 @@ void executar() {
     printf("\n------------------- TABELA DE FINALIZAÇÃO -------------------\n");
 
     for (int i = 1; i < nextBCP+1; i++) {
-        printf("\n %iº %s [%i]", i, chegou[i].nome, chegou[i]);
+        if (chegou[i].pId != -99)
+            printf("\n %iº %s [%i]", i, chegou[i].nome, chegou[i]);
     }
 
     printf("\n\n-------------------------------------------------------------\n");
@@ -236,7 +237,7 @@ void manipulate() {
                     continue;
                 if (prontos[i].pId == currentPID) {
                     prontos[i].pId = -99;
-
+                    prontosBackup[i].pId = -99;
                     strcpy(rmvName, prontos[i].nome);
                     found = true;
                 }
@@ -247,6 +248,7 @@ void manipulate() {
                 break;
             }
 
+            nextBCP--;
             printf("\n[FILA DE PRONTOS] Processo %s [%i] removido com sucesso!", rmvName, currentPID);
             break;
         case 4:
